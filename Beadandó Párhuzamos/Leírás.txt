@@ -1,0 +1,9 @@
+main.c 
+
+Posix Pthread
+
+Sudoku Ellenőrző program
+
+solver.c
+
+Sudoku Megcsináló program
