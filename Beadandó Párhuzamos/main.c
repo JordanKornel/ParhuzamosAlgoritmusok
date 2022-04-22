@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <windows.h>
+#include <time.h>
 
 typedef struct 
 {
@@ -16,6 +17,8 @@ void * squareisgood(void * params);
 
 int main(void) 
 {
+    clock_t start, end;
+    double cpu_time_taken;
     int board[9][9] = {  
             {6, 2, 4, 5, 3, 9, 1, 8, 7},
             {5, 1, 9, 7, 2, 8, 6, 3, 4},
@@ -88,7 +91,7 @@ int main(void)
     param9->row = 6;
     param9->col = 6;
     param9->board = board;
-
+    start = clock();
     pthread_t thread_rows, thread_cols, thread1, thread2, thread3, thread4, thread5, thread6, thread7, thread8, thread9;
     
     void * all_rows;
@@ -143,7 +146,14 @@ int main(void)
     else {
         printf("The Sudoku Puzzle is NOT solved.\n");
     }
-    
+    end = clock();
+    cpu_time_taken = ((double)end-start)/CLOCKS_PER_SEC;
+    printf("%lf\n",cpu_time_taken);
+
+    FILE *fp;
+    fp =fopen("adatok.csv","a");
+    fprintf(fp,"%lf\n",cpu_time_taken);
+
     return 0;
 }
 

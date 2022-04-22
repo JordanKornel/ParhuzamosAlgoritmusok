@@ -1,4 +1,10 @@
 #include <stdio.h>
+#include <time.h>
+//#include <omp.h>
+
+int thread_count = 4;
+
+
 
 int solveSudoku(int x, int y);
 void printSudoku();
@@ -19,13 +25,24 @@ int sudoku[9][9] = {
         };
 
 
+
 int main(){
+    clock_t start, end;
+    double cpu_time_taken;
+    start = clock();
     int x = 0;
     int y = 0;
 
     printSudoku();
     solveSudoku(x,y);
+    printf("Done:\n");
     printSudoku();
+    end = clock();
+    cpu_time_taken = ((double)end-start)/CLOCKS_PER_SEC;
+    printf("%lf\n",cpu_time_taken);
+    FILE *fp;
+    fp =fopen("adatok.csv","a");
+    fprintf(fp,"%lf\n",cpu_time_taken);
     return 0;
 }
 
@@ -127,6 +144,8 @@ int solveSudoku(int x, int y){
                 return 1;
             }
         }
+        
+        //ide kell majd a thread azért hogy kirajzoljam a változásokat
         number++;
     }
     sudoku[x][y] = 0;
