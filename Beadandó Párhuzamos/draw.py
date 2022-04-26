@@ -3,25 +3,23 @@ import csv
 from operator import delitem
 from matplotlib import pyplot as plt
 
-with open("adatok.csv","r") as csv_file:
-    reader = csv.reader(csv_file)
-    adatok=[]
-    for line in reader:
-        adatok.append(line)
-print(adatok[0], adatok[1])
-adat1=list(map(float, adatok[0]))
+def load_times(path):
+        """
+        Load the measured times from the file.
+        """
+        with open(path, "r") as time_file:
+                pthread_time = float(next(time_file))
+                omp_time = float(next(time_file))
+                return {
+                        'pthread_time': pthread_time,
+                        'omp_time': omp_time
+                }
 
-data = {'Pthread':adat1, 'OpenMP':adat1}
-courses = list(data.keys())
-values = list(data.values())
-
-fig = plt.figure(figsize = (10, 5))
-
-# creating the bar plot
-plt.bar(courses, values, color ='maroon',
-        width = 0.4)
-
-plt.xlabel("Courses offered")
-plt.ylabel("Time taken")
-plt.title("Difference between Pthread and OpenMP")
-plt.show()
+if __name__ == '__main__':
+        times = load_times('adatok.csv')
+        fig = plt.figure(figsize = (10, 5))
+        plt.bar(times.keys(), times.values(), color ='maroon', width = 0.4)
+        plt.xlabel("The columns")
+        plt.ylabel("Time taken")
+        plt.title("Difference between Pthread and OpenMP")
+        plt.show()

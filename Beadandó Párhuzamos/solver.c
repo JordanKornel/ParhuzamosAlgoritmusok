@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
-//#include <omp.h>
-
+#include <omp.h>
+#include <stdbool.h>
 int thread_count = 4;
 
 
@@ -27,6 +27,7 @@ int sudoku[9][9] = {
 
 
 int main(){
+    
     clock_t start, end;
     double cpu_time_taken;
     start = clock();
@@ -126,7 +127,7 @@ int solveSudoku(int x, int y){
         }
     }
     if (sudoku[x][y] == 0){
-        while (number < 10){
+        /*/while (number < 10){
             if(!sameSquare(x,y,number) && !sameRow(x,y,number) && !sameColumn(x,y,number)){
                 sudoku[x][y] = number;
                 if(x==8&&y==8){
@@ -144,10 +145,35 @@ int solveSudoku(int x, int y){
                 return 1;
             }
         }
+        /*/
+        bool flag=false;
         
+        #pragma omp parallel for shared (flag)
+        for(int number=1; number<10; number++){
+            if(flag)continue;
+            if(!sameSquare(x,y,number) && !sameRow(x,y,number) && !sameColumn(x,y,number)){
+                sudoku[x][y] = number;
+                if(x==8&&y==8){
+                    flag=true;
+                }
+                if(x<8){
+                    tx = x+1;
+                }else{
+                if(x<8){
+                    tx = 0;
+                    ty = y+1;
+                }
+            }
+            if(solveSudoku(tx,ty)){
+                flag=true;
+            }
+        }
+        /*/
         //ide kell majd a thread azért hogy kirajzoljam a változásokat
         number++;
+        /*/
     }
+    if(flag) return 1;
     sudoku[x][y] = 0;
     return 0;
 }
